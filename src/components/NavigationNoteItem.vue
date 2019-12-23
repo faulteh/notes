@@ -5,8 +5,6 @@
 		:menu-open.sync="actionsOpen"
 		:to="{ name: 'note', params: { noteId: note.id.toString() } }"
 		:class="{ actionsOpen }"
-		:undo="isPrepareDeleting"
-		@undo="onUndoDeleteNote"
 	>
 		<template v-if="!note.deleting" slot="actions">
 			<ActionButton :icon="actionFavoriteIcon" @click="onToggleFavorite">
@@ -52,6 +50,7 @@ export default {
 			},
 			actionsOpen: false,
 			undoTimer: null,
+			undoNotification: null,
 		}
 	},
 
@@ -66,16 +65,8 @@ export default {
 			return icon
 		},
 
-		isPrepareDeleting() {
-			return this.note.deleting === 'prepare'
-		},
-
 		title() {
-			if (this.isPrepareDeleting) {
-				return this.t('notes', 'Deleted {title}', { title: this.note.title })
-			} else {
-				return this.note.title + (this.note.unsaved ? ' *' : '')
-			}
+			return this.note.title + (this.note.unsaved ? ' *' : '')
 		},
 
 		actionFavoriteText() {
@@ -118,26 +109,46 @@ export default {
 
 		onDeleteNote() {
 			this.actionsOpen = false
-			NotesService.prepareDeleteNote(this.note.id)
+			const label = this.t('notes', 'Deleted {title}.', { title: this.note.title })
+			const action = '[ <b><a href="#" class="undo">' + this.t('notes', 'Undo') + '</a></b> ]'
+			this.undoNotification = OC.Notification.showHtml(label + ' ' + action)
+			this.undoNotification.find('.undo').click(this.onUndoDeleteNote)
 			this.undoTimer = setTimeout(this.onDeleteNoteFinally, 7000)
+			NotesService.prepareDeleteNote(this.note.id)
 			this.$emit('note-deleted')
 		},
 
 		onUndoDeleteNote() {
-			clearTimeout(this.undoTimer)
-			NotesService.undoDeleteNote(this.note.id)
+			if (this.undoTimer) {
+				this.clearUndo()
+				NotesService.undoDeleteNote(this.note.id)
+			}
 		},
 
 		onDeleteNoteFinally() {
-			this.loading.delete = true
-			NotesService.deleteNote(this.note.id)
-				.then(() => {
-				})
-				.catch(() => {
-				})
-				.finally(() => {
-					this.loading.delete = false
-				})
+			if (this.undoTimer) {
+				this.clearUndo()
+				this.loading.delete = true
+				NotesService.deleteNote(this.note.id)
+					.then(() => {
+					})
+					.catch(() => {
+					})
+					.finally(() => {
+						this.loading.delete = false
+					})
+			}
+		},
+
+		clearUndo() {
+			if (this.undoTimer) {
+				clearTimeout(this.undoTimer)
+				this.undoTimer = null
+			}
+			if (this.undoNotification) {
+				OC.Notification.hide(this.undoNotification)
+				this.undoNotification = null
+			}
 		},
 	},
 }

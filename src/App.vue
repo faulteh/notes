@@ -72,7 +72,7 @@ export default {
 			const search = this.filter.search.toLowerCase()
 
 			const notes = this.notes.filter(note => {
-				if (note.deleting === 'deleting') {
+				if (note.deleting) {
 					return false
 				}
 				if (this.filter.category !== null
@@ -157,10 +157,12 @@ export default {
 		},
 
 		routeToNote(noteId) {
-			this.$router.push({
-				name: 'note',
-				params: { noteId: noteId.toString() },
-			})
+			if (this.$route.name !== 'note' || this.$route.params.noteId !== noteId.toString()) {
+				this.$router.push({
+					name: 'note',
+					params: { noteId: noteId.toString() },
+				})
+			}
 		},
 
 		onSearch(query) {
