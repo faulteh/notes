@@ -98,6 +98,8 @@ lint-php:
 	@! find lib/ -name "*.php" | xargs -I{} php -l '{}' | grep -v "No syntax errors detected"
 	# PHP CodeSniffer
 	vendor/bin/phpcs --standard=phpcs.xml --runtime-set ignore_warnings_on_exit 1 appinfo/ lib/
+	# PHAN
+	#vendor/phan/phan/phan --allow-polyfill-parser -k .phan/config.php
 
 lint-js:
 	npm run lint

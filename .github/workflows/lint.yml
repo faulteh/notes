@@ -1,0 +1,54 @@
+name: Lint
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  lint-js:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Set up Node
+      uses: actions/setup-node@v1
+    - name: Install Dependencies
+      run: npm ci
+    - name: lint JavaScript
+      run: make lint-js
+    - name: lint Stylesheets
+      run: make lint-css
+    - name: build JavaScript
+      run: make build-js-production
+    env:
+      CI: true
+
+  lint-xml:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Download schema
+      run: wget https://apps.nextcloud.com/schema/apps/info.xsd
+    - name: Lint info.xml
+      uses: ChristophWurst/xmllint-action@v1
+      with:
+        xml-file: ./appinfo/info.xml
+        xml-schema-file: ./info.xsd
+
+  lint-php:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Set up php${{ matrix.php-versions }}
+      uses: shivammathur/setup-php@master
+    - name: Install Dependencies
+      run: composer install --prefer-dist
+    - name: phan
+      run: vendor/phan/phan/phan --allow-polyfill-parser -k .phan/config.php --no-progress-bar -m json | php .phan/to-annotation.php
+    - name: lint PHP
+      run: make lint-php
+    - name: Check Nextcloud min-version consistency
+      run: php tests/nextcloud-version.php

@@ -43,10 +43,10 @@ script:
   # - phpunit --coverage-clover clover.xml -c phpunit.xml
   # - phpunit -c phpunit.integration.xml
 
-  # build js
-  - make init
-  - make lint
-  - make build-js-production
+  # build js => was moved to github actions
+  #- make init
+  #- make lint
+  #- make build-js-production
 
   # Check app validity
   - php ../../occ app:check-code notes
