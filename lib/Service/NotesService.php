@@ -161,9 +161,9 @@ class NotesService {
 		// rename/move file with respect to title/category
 		// this can fail if access rights are not sufficient or category name is illegal
 		try {
-			$this->noteUtil->moveNote($notesFolder, $file, $category, $title);
+			$this->noteUtil->moveNote($notesFolder, $file, $title, $category);
 		} catch (\OCP\Files\NotPermittedException $e) {
-			$err = 'Moving note '.$id.' ('.$title.') to the desired target is not allowed.'
+			$err = 'Moving note '.$file->getId().' ('.$title.') to the desired target is not allowed.'
 				.' Please check the note\'s target category ('.$category.').';
 			$this->logger->error($err, ['app' => $this->appName]);
 		} catch (\Exception $e) {
@@ -179,6 +179,18 @@ class NotesService {
 		if ($mtime) {
 			$file->touch($mtime);
 		}
+
+		return $this->getNote($file, $notesFolder, $this->getTags($id));
+	}
+
+	public function setTitleCategory($userId, $id, string $title, $category=null) : Note {
+		$notesFolder = $this->getFolderForUser($userId);
+		$file = $this->getFileById($notesFolder, $id);
+		if ($title === null) {
+			$note = $this->getNote($file, $notesFolder, [], true);
+			$title = $note->getTitle();
+		}
+		$this->noteUtil->moveNote($notesFolder, $file, $title, $category);
 
 		return $this->getNote($file, $notesFolder, $this->getTags($id));
 	}

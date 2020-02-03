@@ -143,6 +143,19 @@ export default {
 			})
 	},
 
+	setTitle(noteId, title) {
+		return axios
+			.put(this.url('/notes/' + noteId + '/title'), { title: title })
+			.then(response => {
+				store.commit('setNoteAttribute', { noteId: noteId, attribute: 'title', value: response.data })
+			})
+			.catch(err => {
+				console.error(err)
+				this.handleSyncError(this.t('notes', 'Renaming note {id} has failed.', { id: noteId }))
+				throw err
+			})
+	},
+
 	setCategory(noteId, category) {
 		return axios
 			.put(this.url('/notes/' + noteId + '/category'), { category: category })

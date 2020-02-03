@@ -159,8 +159,23 @@ class NotesController extends Controller {
 	 */
 	public function category($id, $category) {
 		return $this->respond(function () use ($id, $category) {
-			$note = $this->notesService->update($id, null, $this->userId, $category);
-			return $note->category;
+			$note = $this->notesService->setTitleCategory($this->userId, $id, null, $category);
+			return $note->getCategory();
+		});
+	}
+
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $id
+	 * @param string $title
+	 * @return DataResponse
+	 */
+	public function title($id, $title) {
+		return $this->respond(function () use ($id, $title) {
+			$note = $this->notesService->setTitleCategory($this->userId, $id, $title, null);
+			return $note->getTitle();
 		});
 	}
 

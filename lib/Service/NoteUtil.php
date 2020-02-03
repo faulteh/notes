@@ -65,7 +65,7 @@ class NoteUtil {
 		return $file->getType() === 'file' && in_array($ext, $allowedExtensions);
 	}
 
-	public function moveNote(Folder $notesFolder, File $file, $category, string $title) {
+	public function moveNote(Folder $notesFolder, File $file, string $title, $category=null) {
 		$id = $file->getId();
 		$currentFilePath = $this->root->getFullPath($file->getPath());
 		$currentBasePath = pathinfo($currentFilePath, PATHINFO_DIRNAME);
