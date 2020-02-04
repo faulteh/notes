@@ -3,7 +3,7 @@
 </template>
 <script>
 
-import MarkdownIt from 'markdown-it';
+import MarkdownIt from 'markdown-it'
 
 export default {
 	name: 'EditorMarkdownIt',
@@ -103,15 +103,9 @@ export default {
 	}
 
 	& pre code {
-		font-size: inherit;
+		font-size: inherit
 		padding: 0;
 	}
-
-
-
-
-
-
 
 	& blockquote {
 		font-style: italic;
