@@ -12,6 +12,19 @@ In your Nextcloud, simply navigate to »Apps«, choose the category »Office«, 
 Nextcloud will notify you about possible updates. Please have a look at [CHANGELOG.md](CHANGELOG.md) for details about changes.
 
 
+## :iphone: Mobile Apps
+Notes provides an API for third-party apps. There are apps available for your smartphone.
+[<img src="img/badges/fdroid.png"
+      alt="Get it on F-Droid"
+      height="80">](https://f-droid.org/repository/browse/?fdid=it.niedermann.owncloud.notes)
+[<img src="img/badges/play.png"
+      alt="Get it on Play Store"
+      height="80">](https://play.google.com/store/apps/details?id=it.niedermann.owncloud.notes)
+[<img src="img/badges/app-store.svg"
+      alt="Download on the App Store"
+      height="80">](https://apps.apple.com/app/cloudnotes-owncloud-notes/id813973264)
+
+
 ## :exclamation: Bugs
 Before reporting bugs:
 

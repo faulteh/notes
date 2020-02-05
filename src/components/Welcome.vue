@@ -16,10 +16,10 @@
 			</div>
 			<div class="feature icon-phone">
 				{{ t('notes', 'Install the app for your mobile phone in order to access your notes from everywhere.') }}
-				<ul>
-					<li><a target="_blank" href="https://github.com/stefan-niedermann/nextcloud-notes">{{ t('notes', 'Android app') }}</a></li>
-					<li><a target="_blank" href="https://github.com/owncloud/notes-iOS-App">{{ t('notes', 'iOS app') }}</a></li>
-				</ul>
+				<br>
+				<a href="https://f-droid.org/repository/browse/?fdid=it.niedermann.owncloud.notes" target="_blank"><img :src="imagePath('badges/fdroid.png')" height="80" alt="Get it on F-Droid"></a>
+				<a href="https://play.google.com/store/apps/details?id=it.niedermann.owncloud.notes" target="_blank"><img :src="imagePath('badges/play.png')" height="80" alt="Get it on Play Store"></a>
+				<a href="https://apps.apple.com/app/cloudnotes-owncloud-notes/id813973264" target="_blank"><img :src="imagePath('badges/app-store.svg')" height="80" alt="Download on the App Store"></a>
 			</div>
 		</div>
 	</AppContent>
@@ -35,6 +35,12 @@ export default {
 
 	components: {
 		AppContent,
+	},
+
+	methods: {
+		imagePath(img) {
+			return OC.imagePath('notes', img)
+		},
 	},
 }
 
